@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  app:
+    image: ravteja/app:V1
+    environment:
+      - RAILS_ENV=production
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: myapp_user
+      MYSQL_PASSWORD: myapp_password
+    volumes:
+      - db_data:/var/lib/mysql
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginapp.conf:/etc/nginx/nginx.conf:ro
+volumes:
+  db_data:
